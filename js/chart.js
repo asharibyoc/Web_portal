@@ -12,7 +12,7 @@ function renderCharts(filteredData = null) {
     const dataToUse = filteredData || window.sharedData?.donationData || [];
 
     // Destroy existing charts
-    ['paymentMethodChart', 'sourceChart', 'firstTimeDonorsChart', 'itemsChart'].forEach(id => {
+    ['paymentMethodChart', 'sourceChart', 'firstTimeDonorsChart', 'itemsChart', 'trendChart', 'deviceChart', 'countryChart'].forEach(id => {
         destroyChart(id);
     });
 
@@ -21,9 +21,10 @@ function renderCharts(filteredData = null) {
         console.warn('No data available for charts');
         return;
     }
+
     // Payment Method Chart
     const paymentMethodData = {};
-    donationData.forEach(donation => {
+    dataToUse.forEach(donation => {
         const method = donation['Payment Method'];
         if (method) {
             paymentMethodData[method] = (paymentMethodData[method] || 0) + donation.Value;
@@ -85,7 +86,7 @@ function renderCharts(filteredData = null) {
         'Other': { amount: 0, count: 0 }
     };
 
-    donationData.forEach(donation => {
+    dataToUse.forEach(donation => {
         if (donation.Gclid) {
             sourceData['Google'].amount += donation.Value;
             sourceData['Google'].count++;
@@ -132,9 +133,9 @@ function renderCharts(filteredData = null) {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        position: 'right', // Display legend on the right side
+                        position: 'right',
                         labels: {
-                            usePointStyle: true, // Use circles instead of rectangles
+                            usePointStyle: true,
                             padding: 20,
                             font: {
                                 size: 12
@@ -162,12 +163,8 @@ function renderCharts(filteredData = null) {
             }
         });
     }
+
     // First Time Donors by Source Chart
-
-
-    // First Time Donors by Source Chart (Doughnut version)
-
-    // First Time Donors by Source Chart (Doughnut version)
     const firstTimeDonorsData = {
         'Google': { count: 0, amount: 0 },
         'Facebook': { count: 0, amount: 0 },
@@ -176,15 +173,15 @@ function renderCharts(filteredData = null) {
     };
     
     // Get the current date range from shared data or use defaults
-    const dateRange = window.sharedData.currentDateRange || {};
-    const periodStart = dateRange.startDate || new Date(document.getElementById('start-date').valueAsDate);
-    const periodEnd = dateRange.endDate || new Date(document.getElementById('end-date').valueAsDate);
+    const dateRange = window.sharedData?.currentDateRange || {};
+    const periodStart = dateRange.startDate || (document.getElementById('start-date') ? new Date(document.getElementById('start-date').valueAsDate) : null);
+    const periodEnd = dateRange.endDate || (document.getElementById('end-date') ? new Date(document.getElementById('end-date').valueAsDate) : null);
 
     // Get all historical donations before the filtered period
-    const historicalDonations = window.sharedData.allHistoricalData.filter(d => {
+    const historicalDonations = window.sharedData?.allHistoricalData?.filter(d => {
         const donationDate = new Date(d['Entry Date']);
         return periodStart ? donationDate < periodStart : false;
-    });
+    }) || [];
     const historicalDonors = new Set(historicalDonations.map(d => d.Email));
 
     // Process each donation in the filtered data to identify first-time donors by source
@@ -210,10 +207,7 @@ function renderCharts(filteredData = null) {
         }
     });
 
-    // ... rest of the chart rendering code ...
-
-
-    // First Time Donors Chart - Corrected Version
+    // First Time Donors Chart
     const firstTimeDonorsCtx = document.getElementById('firstTimeDonorsChart');
     if (firstTimeDonorsCtx) {
         chartInstances.firstTimeDonorsChart = new Chart(firstTimeDonorsCtx, {
@@ -222,7 +216,7 @@ function renderCharts(filteredData = null) {
                 labels: Object.keys(firstTimeDonorsData),
                 datasets: [{
                     label: 'First-Time Donations',
-                    data: Object.values(firstTimeDonorsData).map(source => source.count), // Show count instead of amount
+                    data: Object.values(firstTimeDonorsData).map(source => source.count),
                     backgroundColor: [
                         '#4285F4', // Google blue
                         '#4267B2', // Facebook blue
@@ -271,11 +265,12 @@ function renderCharts(filteredData = null) {
             }
         });
     }
+
     // Items Chart
     const itemsData = {};
-    const itemsCount = {}; // To track the number of donations per item
+    const itemsCount = {};
 
-    donationData.forEach(donation => {
+    dataToUse.forEach(donation => {
         if (donation.Items && Array.isArray(donation.Items)) {
             donation.Items.forEach(item => {
                 const itemName = item.item_name;
@@ -344,25 +339,10 @@ function renderCharts(filteredData = null) {
             }
         });
     }
-}
-
-function renderAnalyticsCharts() {
-    // Get data from shared reference
-    const donationData = window.sharedData?.donationData || [];
-
-    // Destroy existing charts
-    ['trendChart', 'deviceChart', 'countryChart'].forEach(id => {
-        destroyChart(id);
-    });
-
-    if (donationData.length === 0) {
-        console.warn('No data available for analytics charts');
-        return;
-    }
 
     // Trend Chart (donations over time)
     const trendData = {};
-    donationData.forEach(donation => {
+    dataToUse.forEach(donation => {
         const date = new Date(donation['Entry Date']);
         if (!isNaN(date.getTime())) {
             const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -423,7 +403,7 @@ function renderAnalyticsCharts() {
 
     // Device Chart
     const deviceData = {};
-    donationData.forEach(donation => {
+    dataToUse.forEach(donation => {
         const device = donation.Device || 'Unknown';
         deviceData[device] = (deviceData[device] || 0) + donation.Value;
     });
@@ -471,17 +451,17 @@ function renderAnalyticsCharts() {
         });
     }
 
-    // Country Chart
+    // Country Chart (if you have country data)
     const countryData = {};
-    donationData.forEach(donation => {
-        const country = donation.Country ? donation.Country.toUpperCase() : 'Unknown';
+    dataToUse.forEach(donation => {
+        const country = donation.Country || 'Unknown';
         countryData[country] = (countryData[country] || 0) + donation.Value;
     });
 
-    // Sort countries by value and take top 5
+    // Sort countries by value and take top 10
     const sortedCountries = Object.entries(countryData)
         .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
+        .slice(0, 10);
 
     const countryCtx = document.getElementById('countryChart');
     if (countryCtx && sortedCountries.length > 0) {
@@ -490,7 +470,7 @@ function renderAnalyticsCharts() {
             data: {
                 labels: sortedCountries.map(country => country[0]),
                 datasets: [{
-                    label: 'Donation Amount',
+                    label: 'Total Donated',
                     data: sortedCountries.map(country => country[1]),
                     backgroundColor: '#36b9cc',
                     borderColor: '#2c9faf',
@@ -516,7 +496,7 @@ function renderAnalyticsCharts() {
                     tooltip: {
                         callbacks: {
                             label: function (context) {
-                                return '$' + context.raw.toFixed(2);
+                                return `${context.label}: $${context.raw.toFixed(2)}`;
                             }
                         }
                     }
@@ -595,5 +575,5 @@ function renderDonorHistoryChart() {
 
 // Make functions available globally
 window.renderCharts = renderCharts;
-window.renderAnalyticsCharts = renderAnalyticsCharts;
+// window.renderAnalyticsCharts = renderAnalyticsCharts;
 window.renderDonorHistoryChart = renderDonorHistoryChart;

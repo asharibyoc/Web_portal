@@ -28,11 +28,6 @@
                                 <i class="bi bi-people me-2"></i>Donors
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" id="analytics-link">
-                                <i class="bi bi-graph-up me-2"></i>Analytics
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -44,7 +39,7 @@
                     <h1 class="h2">Donation Data Analysis Portal</h1>
                 </div>
 
-                <!-- Dashboard View -->
+                <!-- Dashboard View (now includes analytics) -->
                 <!-- In your HTML -->
                 <div id="dashboard-view">
                     <div class="row mb-4">
@@ -245,6 +240,42 @@
                         </div>
                     </div>
 
+                    <!-- Analytics Charts (previously in separate analytics view) -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5>Donation Trends Over Time</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="trendChart" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5>Donations by Device</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="deviceChart" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5>Donations by Country</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="countryChart" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
 
@@ -359,45 +390,6 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Analytics View -->
-                <div id="analytics-view" style="display: none;">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h5>Donation Trends Over Time</h5>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="trendChart" height="300"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h5>Donations by Device</h5>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="deviceChart" height="300"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h5>Donations by Country</h5>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="countryChart" height="300"></canvas>
                                 </div>
                             </div>
                         </div>

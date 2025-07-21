@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const dashboardLink = document.getElementById('dashboard-link');
     const donorsLink = document.getElementById('donors-link');
-    const analyticsLink = document.getElementById('analytics-link');
+    // const analyticsLink = document.getElementById('analytics-link');
 
     const backToDonorsBtn = document.getElementById('back-to-donors');
     const donorSearch = document.getElementById('donor-search');
@@ -36,10 +36,10 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         showDonors();
     });
-    analyticsLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        showAnalytics();
-    });
+    // analyticsLink.addEventListener('click', (e) => {
+    //     e.preventDefault();
+    //     showAnalytics();
+    // });
     backToDonorsBtn.addEventListener('click', (e) => {
         e.preventDefault();
         showDonors();
@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function () {
         dashboardView.style.display = 'block';
         donorsView.style.display = 'none';
         donorDetailView.style.display = 'none';
-        analyticsView.style.display = 'none';
+        // analyticsView.style.display = 'none';
             
         // Update active nav
         updateActiveNav('dashboard-link');
@@ -257,34 +257,34 @@ document.addEventListener('DOMContentLoaded', function () {
         dashboardView.style.display = 'none';
         donorsView.style.display = 'block';
         donorDetailView.style.display = 'none';
-        analyticsView.style.display = 'none';
+        // analyticsView.style.display = 'none';
 
         updateActiveNav('donors-link');
         renderDonorsList();
     }
 
     // Show analytics view
-    function showAnalytics() {
-        dashboardView.style.display = 'none';
-        donorsView.style.display = 'none';
-        donorDetailView.style.display = 'none';
-        analyticsView.style.display = 'block';
+    // function showAnalytics() {
+    //     dashboardView.style.display = 'none';
+    //     donorsView.style.display = 'none';
+    //     donorDetailView.style.display = 'none';
+    //     analyticsView.style.display = 'block';
 
-        updateActiveNav('analytics-link');
+    //     updateActiveNav('analytics-link');
 
-        setTimeout(() => {
-            if (typeof window.renderAnalyticsCharts === 'function') {
-                window.renderAnalyticsCharts();
-            }
-        }, 100);
-    }
+    //     setTimeout(() => {
+    //         if (typeof window.renderAnalyticsCharts === 'function') {
+    //             window.renderAnalyticsCharts();
+    //         }
+    //     }, 100);
+    // }
 
     // Show donor detail view
     function showDonorDetail(donorEmail) {
         dashboardView.style.display = 'none';
         donorsView.style.display = 'none';
         donorDetailView.style.display = 'block';
-        analyticsView.style.display = 'none';
+        // analyticsView.style.display = 'none';
 
         currentDonor = donors.find(d => d.email === donorEmail);
         window.sharedData.currentDonor = currentDonor;
@@ -716,8 +716,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateCurrentView() {
         if (dashboardView.style.display !== 'none') {
             showDashboard();
-        } else if (analyticsView.style.display !== 'none') {
-            showAnalytics();
+        // } else if (analyticsView.style.display !== 'none') {
+        //     showAnalytics();
         } else if (donorsView.style.display !== 'none') {
             showDonors();
         }
