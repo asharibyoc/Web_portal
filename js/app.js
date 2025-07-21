@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Update DOM
         document.getElementById('total-donations').textContent = `$${totalDonations.toFixed(2)}`;
-        document.getElementById('unique-donors').textContent = uniqueDonors;
+        document.getElementById('unique-donors').textContent = uniqueDonors-firstTimeDonors.count;
         document.getElementById('avg-donation').textContent = `$${avgDonation.toFixed(2)}`;
         document.getElementById('no-of-donations').textContent = donationData.length;
         document.getElementById('first-time-donors').textContent = firstTimeDonors.count;
